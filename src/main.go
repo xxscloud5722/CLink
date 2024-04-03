@@ -12,8 +12,12 @@ import (
 
 func main() {
 	var rootCmd = &cobra.Command{
-		Use: "clink",
-		//Long: "Kafka log data to Clickhouse storage connection program, its performance is excellent and easy to use",
+		Use:   "clink",
+		Short: "Welcome to CLink Synchronizer, Version : 1.2.1",
+	}
+	var syncCmd = &cobra.Command{
+		Use:   "sync",
+		Short: "Kafka log data to Clickhouse storage connection program, its performance is excellent and easy to use",
 		Run: func(cmd *cobra.Command, args []string) {
 			configPath, err := cmd.Flags().GetString("config")
 			if err != nil {
@@ -24,7 +28,6 @@ func main() {
 				color.Red(err.Error())
 			}
 			if _, err = os.Stat(configPath); os.IsNotExist(err) {
-				err = cmd.Help()
 				if err != nil {
 					color.Red(err.Error())
 				}
@@ -36,12 +39,14 @@ func main() {
 			}
 		},
 	}
-	rootCmd.CompletionOptions.HiddenDefaultCmd = true
-	rootCmd.PersistentFlags().BoolP("debug", "d", false, "Enable debugging")
-	rootCmd.PersistentFlags().StringP("config", "c", "./config.yaml", "Configuration file path")
+	syncCmd.CompletionOptions.HiddenDefaultCmd = true
+	syncCmd.Flags().BoolP("debug", "d", false, "Enable debugging")
+	syncCmd.Flags().StringP("config", "c", "./config.yaml", "Configuration file path")
+	rootCmd.AddCommand(syncCmd)
 
 	var regularCmd = &cobra.Command{
-		Use: "reg",
+		Use:   "reg",
+		Short: "Regex Test",
 		Run: func(cmd *cobra.Command, args []string) {
 			regular, err := cmd.Flags().GetString("regular")
 			if err != nil {
@@ -79,11 +84,10 @@ func main() {
 			}
 		},
 	}
-	regularCmd.PersistentFlags().StringP("regular", "r", "", "Regular expression")
-	regularCmd.PersistentFlags().StringP("file", "f", "./test.log", "Debugging log files")
+	regularCmd.Flags().StringP("regular", "r", "", "Regular expression")
+	regularCmd.Flags().StringP("file", "f", "./test.log", "Debugging log files")
 	rootCmd.AddCommand(regularCmd)
 
-	color.Blue("Welcome to CLink Synchronizer, Version : 1.2.1")
 	err := rootCmd.Execute()
 	if err != nil {
 		color.Red(err.Error())
