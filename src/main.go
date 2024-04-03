@@ -17,7 +17,7 @@ func main() {
 	}
 	var syncCmd = &cobra.Command{
 		Use:   "sync",
-		Short: "Kafka log data to Clickhouse storage connection program, its performance is excellent and easy to use",
+		Short: "Kafka log data to Clickhouse storage connection program",
 		Run: func(cmd *cobra.Command, args []string) {
 			configPath, err := cmd.Flags().GetString("config")
 			if err != nil {
