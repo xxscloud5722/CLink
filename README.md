@@ -1,4 +1,4 @@
-# Kafka to Clickhouse
+# cLink
 
 `New` generation logging solution.
 
@@ -35,40 +35,41 @@ go build -o ./dist/log_sync src/main.go
 # Configuration instructions
 
 ```yaml
-# Kafka Config
 kafka:
-  host: 10.10.1.5
+  server: kafka.example.com
   port: 9094
+  sasl:
+    username: your username
+    password: your password
   consumer:
-    group-id: default
-# ClickHouse
+    group-id: your group
+    topic:
+      - your topic
 clickhouse:
-  host: 10.10.1.5
+  server: your clickhouse server
   port: 9000
-  username: default
-  password: *******
-  database: logs
-# Subscription Topic
-topic:
-  - test
-# ClickHouse full table path
-sink: logs.ding
-# Table Field
-fields: date, env, service_code, level, thread, class, message
-# Golang Pattern Parse group
-pattern: '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+) (\w+) \[([^]]+)\] ([^:]+) : (.+[\s\S]*)'
-# Parse Field mapping
-pattern-index:
+  username: your username
+  password: your password
+  database: your database
+  table: your table
+  fields:
+    system_code: system_code
+    date: date
+    env: env
+    service_code: service_code
+    level: level
+    thread: thread
+    class: class
+    message: message
+    trace_id: trace_id
+pattern: '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+) (\w+) \[([^]]+)\] \[([^]]+)\] ([^:]+) : (.+[\s\S]*)'
+pattern-fields:
   - date
   - level
   - thread
+  - trace_id
   - class
   - message
-debug: true
-# Debug true, Log output format, Use ${} for variables
-output:
-  # ${env}/${service_code}
-  format: '${env}/${service_code} ${date} ${level} [${thread}] ${class} : ${message}'
 
 ```
 
@@ -78,7 +79,7 @@ Confirm that the program has been downloaded or programming is completed.
 
 ```bash
 # start 
-log_sync config.yaml
+./cLink sync config.yaml
 ```
 
 # Contributors
@@ -91,10 +92,7 @@ Thanks for your contributions!
 
 ```bash
 # pull image
-docker pull xxscloud5722/kafka_to_clickhouse:1.0.1
-
-# Import Config and Run
-docker run -v [config]:/app/config/config.yaml xxscloud5722/kafka_to_clickhouse
+docker pull xxscloud5722/cLink:1.0.1
 ```
 
 # Case-CN
