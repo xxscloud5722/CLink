@@ -29,7 +29,7 @@ Minimum Supported Golang Version is 1.20.
 # windows OR linux
 go env -w GOOS=linux
 go mod tidy
-go build -o ./dist/log_sync src/main.go
+go build -o ./dist/cLink src/main.go
 ```
 
 # Configuration instructions
