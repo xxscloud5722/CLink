@@ -73,13 +73,11 @@ pattern-fields:
 
 ```
 
-# LogSync Demo
-
-Confirm that the program has been downloaded or programming is completed.
+# Docker
 
 ```bash
-# start 
-./cLink sync config.yaml
+# pull image
+docker pull xxscloud5722/cLink:1.0.1
 ```
 
 # Contributors
@@ -88,12 +86,6 @@ Thanks for your contributions!
 
 - [@xiaoliuya](https://github.com/xxscloud5722/)
 
-# Docker
-
-```bash
-# pull image
-docker pull xxscloud5722/cLink:1.0.1
-```
 
 # Case-CN
 
