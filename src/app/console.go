@@ -10,15 +10,19 @@ import (
 
 type Config struct {
 	Kafka struct {
-		Server   string `yaml:"server"` // Kafka 地址.
-		Port     int    `yaml:"port"`   // Kafka 端口.
+		Server string `yaml:"server"` // Kafka 地址.
+		Port   int    `yaml:"port"`   // Kafka 端口.
+		SASL   struct {
+			Username string `yaml:"username"` // SASL 用户名称.
+			Password string `yaml:"password"` // SASL 用户密码.
+		} `yaml:"sasl"`
 		Consumer struct {
 			GroupId string   `yaml:"group-id"` // Kafka 消费者分组ID.
 			Topic   []string `yaml:"topic"`    // Kafka 消费则主题.
-		} `json:"consumer"`
+		} `yaml:"consumer"`
 	} `yaml:"kafka"`
 	Clickhouse struct {
-		Server   string            `yaml:"host"`     // Clickhouse 地址.
+		Server   string            `yaml:"server"`   // Clickhouse 地址.
 		Port     int               `yaml:"port"`     // Clickhouse 端口.
 		Username string            `yaml:"username"` // Clickhouse 用户名称.
 		Password string            `yaml:"password"` // Clickhouse 用户密码.

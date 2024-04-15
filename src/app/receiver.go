@@ -21,26 +21,34 @@ type MessageHandler interface {
 	Handler(message []*LogMessage) error
 }
 type KafkaReceiver struct {
-	server  string   // server 服务器地址.
-	port    int      // port 端口号.
-	groupId string   // groupId 分组ID.
-	topic   []string // topic 主题.
-	debug   bool     // debug 是否启用调试.
+	server   string   // server 服务器地址.
+	port     int      // port 端口号.
+	groupId  string   // groupId 分组ID.
+	topic    []string // topic 主题.
+	username string   // username SASL 账号.
+	password string   // password SASL 密码.
+	debug    bool     // debug 是否启用调试.
 }
 
 func NewKafka(config *Config) (*KafkaReceiver, error) {
 	return &KafkaReceiver{
-		server:  config.Kafka.Server,
-		port:    config.Kafka.Port,
-		groupId: config.Kafka.Consumer.GroupId,
-		topic:   config.Kafka.Consumer.Topic,
-		debug:   config.debug,
+		server:   config.Kafka.Server,
+		port:     config.Kafka.Port,
+		groupId:  config.Kafka.Consumer.GroupId,
+		topic:    config.Kafka.Consumer.Topic,
+		username: config.Kafka.SASL.Username,
+		password: config.Kafka.SASL.Password,
+		debug:    config.debug,
 	}, nil
 }
 
 func (kafka *KafkaReceiver) receiver(size int, timeout int64, handler MessageHandler) error {
 	kafkaConfig := sarama.NewConfig()
 	kafkaConfig.Consumer.Offsets.Initial = sarama.OffsetNewest
+	kafkaConfig.Net.SASL.Enable = true
+	kafkaConfig.Net.SASL.User = kafka.username
+	kafkaConfig.Net.SASL.Password = kafka.password
+	kafkaConfig.Net.SASL.Mechanism = sarama.SASLTypePlaintext
 	brokerList := []string{fmt.Sprintf("%s:%d", kafka.server, kafka.port)}
 	consumer, err := sarama.NewConsumerGroup(brokerList, kafka.groupId, kafkaConfig)
 	if err != nil {

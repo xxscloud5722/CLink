@@ -3,6 +3,7 @@ module github.com/xxscloud5722/cLink
 go 1.20
 
 require (
+	github.com/ClickHouse/clickhouse-go v1.5.4
 	github.com/IBM/sarama v1.42.1
 	github.com/fatih/color v1.16.0
 	github.com/jmoiron/sqlx v1.3.5
@@ -12,6 +13,7 @@ require (
 )
 
 require (
+	github.com/cloudflare/golz4 v0.0.0-20150217214814-ef862a3cdc58 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/eapache/go-resiliency v1.5.0 // indirect
 	github.com/eapache/go-xerial-snappy v0.0.0-20230731223053-c322873962e3 // indirect

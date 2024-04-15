@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	_ "github.com/ClickHouse/clickhouse-go"
 	"github.com/jmoiron/sqlx"
 	"github.com/samber/lo"
 	"log"
@@ -37,7 +38,7 @@ func NewClickhouseTransmitter(config *Config) (*ClickhouseTransmitter, error) {
 		return item.String()
 	})
 	columnsRow := strings.Repeat("?, ", len(columns))
-	columnsRow = columnsRow[:len(columnsRow)-1]
+	columnsRow = columnsRow[:len(columnsRow)-2]
 	return &ClickhouseTransmitter{
 		Server:     config.Clickhouse.Server,
 		Conn:       clickhouseConn,
@@ -59,6 +60,12 @@ func (c *ClickhouseTransmitter) transmitter(message []*LogMessage) error {
 		return err
 	}
 	for _, param := range params {
+		_, flag := lo.Find(param, func(item any) bool {
+			return item.(string) == ""
+		})
+		if flag {
+			continue
+		}
 		_, err = prepare.Exec(param...)
 		if err != nil {
 			return err
@@ -75,18 +82,19 @@ func (c *ClickhouseTransmitter) transmitter(message []*LogMessage) error {
 // toSQL 将数据转成脚本以及参数.
 func (c *ClickhouseTransmitter) toSQL(message []*LogMessage) (string, [][]any) {
 	var sql = "INSERT INTO " + c.Table + " ( " + strings.Join(c.Columns, ", ") + " ) \n " +
-		"VALUES \n"
-	for i := range message {
-		if i+1 == len(message) {
-			sql += " ( " + c.ColumnsRow + " )"
-		} else {
-			sql += " ( " + c.ColumnsRow + " ), \n"
-		}
-	}
+		"VALUES \n ( " + c.ColumnsRow + " )"
+	//for i := range message {
+	//	if i+1 == len(message) {
+	//		sql += " ( " + c.ColumnsRow + " )"
+	//	} else {
+	//		sql += " ( " + c.ColumnsRow + " ), \n"
+	//	}
+	//}
 	var params [][]any
 	for _, item := range message {
 		var values []any
-		for _, dataKey := range c.Fields {
+		for _, column := range c.Columns {
+			dataKey := c.Fields[column]
 			value, dataOk := item.Attribute[dataKey]
 			if dataOk {
 				values = append(values, value)
