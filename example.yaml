@@ -1,0 +1,35 @@
+kafka:
+  server: kafka.example.com
+  port: 9094
+  sasl:
+    username: your username
+    password: your password
+  consumer:
+    group-id: your group
+    topic:
+      - your topic
+clickhouse:
+  server: your clickhouse server
+  port: 9000
+  username: your username
+  password: your password
+  database: your database
+  table: your table
+  fields:
+    system_code: system_code
+    date: date
+    env: env
+    service_code: service_code
+    level: level
+    thread: thread
+    class: class
+    message: message
+    trace_id: trace_id
+pattern: '(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}\.\d+) (\w+) \[([^]]+)\] \[([^]]+)\] ([^:]+) : (.+[\s\S]*)'
+pattern-fields:
+  - date
+  - level
+  - thread
+  - trace_id
+  - class
+  - message
