@@ -19,7 +19,7 @@ Minimum Supported Golang Version is 1.20.
 # Getting started
 
 **Download package**
-[latest version 1.0.1](https://github.com/xxscloud5722/kafka_to_clickhouse/releases)
+[latest version 1.0.1](https://github.com/xxscloud5722/cLink/releases)
 
 **Program compilation**
 
